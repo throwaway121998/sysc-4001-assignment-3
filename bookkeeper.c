@@ -69,6 +69,7 @@ void del(struct Node** head_ref, struct Node* del) {
 
 // Print the database of employees
 void printDB(struct Node* node) {
+    printf("Printing the employee list...\n");
     while (node != NULL) {
         printf("Employee name: %s", node->employee.name);
         printf("Department name: %s", node->employee.department);
