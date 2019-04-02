@@ -114,34 +114,49 @@ int main(int argc, const char * argv[]) {
             // Check name handler
             int id = atoi(rcv_msg(to_bookkeeper));
             struct Node* node = head;
+            int has_found = -1;
             while(node != NULL) {
                 // Find the employee id that matches
                 if (node->employee.id == id) {
                     // Send the name of the employee back to the client
                     strcpy(msg.payload, node->employee.name);
                     send_msg(to_admin);
+                    has_found = 0;
                     break;
                 }
                 node = node->next;
+            }
+            // Employee not found
+            if (has_found == -1) {
+                strcpy(msg.payload, "err");
+                send_msg(to_admin);
             }
         } else if (strncmp(buffer, PROCEDURE[CHECK_DEPARTMENT], 16) == 0) {
             // Check department handler
             int id = atoi(rcv_msg(to_bookkeeper));
             struct Node* node = head;
+            int has_found = -1;
             while(node != NULL) {
                 // Find the employee id that matches
                 if (node->employee.id == id) {
                     // Send the name of the department back to the client
                     strcpy(msg.payload, node->employee.department);
                     send_msg(to_admin);
+                    has_found = 0;
                     break;
                 }
                 node = node->next;
+            }
+            // Employee not found
+            if (has_found == -1) {
+                strcpy(msg.payload, "err");
+                send_msg(to_admin);
             }
         } else if (strncmp(buffer, PROCEDURE[CHECK_SALARY], 12) == 0) {
             // Check salary handler
             int id = atoi(rcv_msg(to_bookkeeper));
             struct Node* node = head;
+            int has_found = -1;
             while(node != NULL) {
                 // Find the employee id that matches
                 if (node->employee.id == id) {
@@ -150,14 +165,21 @@ int main(int argc, const char * argv[]) {
                     sprintf(buffer, "%d", node->employee.salary);
                     strcpy(msg.payload, buffer);
                     send_msg(to_admin);
+                     has_found = 0;
                     break;
                 }
                 node = node->next;
+            }
+            // Employee not found
+            if (has_found == -1) {
+                strcpy(msg.payload, "err");
+                send_msg(to_admin);
             }
         } else if (strncmp(buffer, PROCEDURE[CHECK_EMPLOYEE_NUMBER], 21) == 0) {
             // Check employee number handler
             char* name = rcv_msg(to_bookkeeper);
             struct Node* node = head;
+            int has_found = -1;
             while(node != NULL) {
                 // Find the employee name that matches
                 if (strcmp(node->employee.name, name) == 0) {
@@ -166,16 +188,24 @@ int main(int argc, const char * argv[]) {
                     sprintf(buffer, "%d", node->employee.id);
                     strcpy(msg.payload, buffer);
                     send_msg(to_admin);
+                     has_found = 0;
                     break;
                 }
                 node = node->next;
+            }
+            // Employee not found
+            if (has_found == -1) {
+                strcpy(msg.payload, "err");
+                send_msg(to_admin);
             }
         } else if (strncmp(buffer, PROCEDURE[CHECK], 5) == 0) {
             // Check handler
             char department[MAX_TEXT];
             strcpy(department, rcv_msg(to_bookkeeper));
             struct Node* node = head;
-            while(node != NULL) {
+            int counter = 0;
+            // Send max of 3 employees back to admin
+            while(node != NULL && counter < 3) {
                 // Find the employee department that matches
                 if (strcmp(node->employee.department, department) == 0) {
                     // Send the id of the employee back to the client
@@ -183,6 +213,7 @@ int main(int argc, const char * argv[]) {
                     sprintf(buffer, "%d", node->employee.id);
                     strcpy(msg.payload, buffer);
                     send_msg(to_admin);
+                    counter++;
                     // Loop again
                 }
                 node = node->next;
