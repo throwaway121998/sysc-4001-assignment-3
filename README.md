@@ -86,24 +86,13 @@ Our solution uses two processes and message queues. The first process, `admin.c`
 
 ### Note 
 
-We choose a buffer size of 32 characters instead of 12 because the procedure `check_employee_number` is of length 21; thus, we needed a buffer size larger than 12 in order to send this procedure call.
+* We choose a buffer size of 32 characters instead of 12 because the procedure `check_employee_number` is of length 21; thus, we needed a buffer size larger than 12 in order to send this procedure call.
+* `check` returns a max of three employees.
 
 ### Known limitations
 
 #### insert 
 Insert assumes that the employee number is unique. Additionally, there is no error checking to determine if the employee number and salary are integers (if they are not integers, the input is converted to zero).
-
-#### check_name
-check_name assumes that the employee number exist in the database (the assignment guidelines do not specify whether we should handle this invalid query).
-
-#### check_department
-check_department assumes that the employee exist in the database (the assignment guidelines do not specify whether we should handle this invalid query).
-
-#### check_salary
-check_salary assumes that the employee number exist in the database (the assignment guidelines do not specify whether we should handle this invalid query).
-
-#### check_employee_number
-check_employee_number assumes that the employee name exist in the database (the assignment guidelines do not specify whether we should handle this invalid query).
 
 ## Pseudocode
 ### admin.c
@@ -121,19 +110,19 @@ Loop while running is 1
 	Else if action is CHECK_NAME
 		Send action to bookkeeper
 		Get input for employee id and send to bookkeeper
-		Receive message from bookkeeper and print employee name
+		Receive message from bookkeeper and print employee name if it exist
 	Else if action is CHECK_DEPARTMENT
 		Send action to bookkeeper
 		Get input for employee id and send to bookkeeper
-		Receive message from bookkeeper and print employee department
+		Receive message from bookkeeper and print employee department if it exist
 	Else if action is CHECK_SALARY
 		Send action to bookkeeper
 		Get input for employee id and send to bookkeeper
-		Receive message from bookkeeper and print employee salary
+		Receive message from bookkeeper and print employee salary if it exist
 	Else if action is CHECK_EMPLOYEE_NUMBER
 		Send action to bookkeeper
 		Get input for employee name and send to bookkeeper
-		Receive message from bookkeeper and print employee id
+		Receive message from bookkeeper and print employee id if it exist
 	Else if action is CHECK
 		Send action to bookkeeper
 		Get input for employee department and send to bookkeeper
@@ -144,7 +133,8 @@ Loop while running is 1
 			Else
 				Print employee id
 	Else if action is DELETE
-		Get input for employee id and send to bookkeeper	
+		Get input for employee id and send to bookkeeper
+		Print the result from the bookkeeper
 	Else if action is EXIT
 		Send action to bookkeeper
 		Set running to 0
@@ -166,21 +156,23 @@ Loop while running is 1
 		Print the employee list
 	Else if procedure is CHECK_NAME
 		Find the employee id that matches
-		Send the name of the employee back to admin
+		Send the name of the employee back to admin if it exist, err otherwise
 	Else if procedure is CHECK_DEPARTMENT
 		Find the employee id that matches
-		Send the name of the department back to admin
+		Send the name of the department back to admin if it exist, err otherwise
 	Else if procedure is CHECK_SALARY
 		Find the employee id that matches
-		Send the salary of the employee back to admin
+		Send the salary of the employee back to admin if it exist, err otherwise
 	Else if procedure is CHECK_EMPLOYEE_NUMBER
 		Find the employee name that matches
-		Send the id of the employee back to admin
+		Send the id of the employee back to admin if it exist, err otherwise
 	Else if procedure is CHECK
-		Loop while node is not NULL
+		counter = 0
+		Loop while node is not NULL and counter < 3
 			Find the employee department that matches
 			Send the id of the employee back to the client
 			Get next node
+			counter++
 		Tell admin that there are no more employees to check
 	Else if procedure is DELETE
 		Find the employee id that matches
