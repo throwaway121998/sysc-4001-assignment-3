@@ -171,17 +171,15 @@ int main(int argc, const char * argv[]) {
             }
         } else if (strncmp(buffer, PROCEDURE[CHECK], 5) == 0) {
             // Check handler
-            char* department = rcv_msg(to_bookkeeper);
+            char department[MAX_TEXT];
+            strcpy(department, rcv_msg(to_bookkeeper));
             struct Node* node = head;
             while(node != NULL) {
-                printf("checking...\n");
                 // Find the employee department that matches
-                printf("%s %s\n", node->employee.department, department);
                 if (strcmp(node->employee.department, department) == 0) {
                     // Send the id of the employee back to the client
                     char buffer[MAX_TEXT];
                     sprintf(buffer, "%d", node->employee.id);
-                    printf("Found %s", buffer);
                     strcpy(msg.payload, buffer);
                     send_msg(to_admin);
                     // Loop again
