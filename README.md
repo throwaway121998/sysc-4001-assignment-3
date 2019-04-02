@@ -98,9 +98,9 @@ Insert assumes that the employee number is unique. Additionally, there is no err
 ### admin.c
 ```
 Instantiate the message queues
-Listen for request from standard in
+Listen for requests from standard in
 Loop while running is 1
-	Input procedure call from standard in
+	Input and parse the procedure call from standard in
 	If action is INSERT
 		Send action to bookkeeper
 		Get input for employee name and send to bookkeeper
@@ -128,7 +128,7 @@ Loop while running is 1
 		Get input for employee department and send to bookkeeper
 		Loop while is_eof is 1
 			Receive message from bookkeeper 
- 			If message is 0
+ 			If message is eof
 				Set is_eof to 0
 			Else
 				Print employee id
@@ -152,7 +152,7 @@ Loop while running is 1
 	Parse the procedure call
 	If procedure is INSERT
 		Instatiate a new employee
-		Push the item on the employee list
+		Push the employee on the list
 		Print the employee list
 	Else if procedure is CHECK_NAME
 		Find the employee id that matches
