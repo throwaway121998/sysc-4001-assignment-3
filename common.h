@@ -1,6 +1,6 @@
 //
 //  common.h
-//  bookkeeper
+//  admin
 //
 //  Created by Kyle Horne on 2019-04-01.
 //  Copyright © 2019 Kyle Horne. All rights reserved.
@@ -17,6 +17,7 @@ typedef struct {
 
 static Message msg;
 
+// Possible actions
 enum ACTION {
     INSERT, CHECK_NAME, CHECK_DEPARTMENT, CHECK_SALARY, CHECK_EMPLOYEE_NUMBER, CHECK, DELETE, EXIT, ERROR
 };
@@ -25,6 +26,7 @@ static const char *PROCEDURE[] = {
     "insert", "check_name", "check_department", "check_salary", "check_employee_number", "check", "delete", "exit", "error"
 };
 
+// Parse procedure type from standard in
 enum ACTION get_procedure() {
     printf("Enter a procedure call: ");
     char buffer[BUFSIZ];
@@ -50,6 +52,7 @@ enum ACTION get_procedure() {
 }
 
 #define ADMIN_KEY 1235
+// Create admin message queue
 int create_admin_msg_queue() {
     int msgid;
     msgid = msgget((key_t)ADMIN_KEY, 0666 | IPC_CREAT);
@@ -60,6 +63,7 @@ int create_admin_msg_queue() {
     return msgid;
 }
 
+// Send message
 void send_msg(int msgid) {
     msg.type = 1;
     if (msgsnd(msgid, (void *)&msg, MAX_TEXT, 0) == -1) {
@@ -68,6 +72,7 @@ void send_msg(int msgid) {
     }
 }
 
+// Receive message
 char* rcv_msg(int msgid) {
     long int msg_to_receive = 0;
     if (msgrcv(msgid, (void *)&msg, BUFSIZ, msg_to_receive, 0) == -1) {
@@ -78,6 +83,7 @@ char* rcv_msg(int msgid) {
 }
 
 #define BOOKKEEPER_KEY 4313
+// Create bookkepper message queue
 int create_bookkeeper_msg_queue() {
     int msgid;
     msgid = msgget((key_t)BOOKKEEPER_KEY, 0666 | IPC_CREAT);
