@@ -82,7 +82,7 @@ Delete result: -1
 
 ## Discussion
 
-Our solution uses two processes and message queues. The first process, `admin.c`, is tasked with parsing inputs and communicating with the `bookkeeper.c` via message queue. The second process, `bookkeeper.c`, is tasked with adding, removing, and retrieving information from a doubly linked list depending on the procedure call.
+Our solution uses two processes and message queues. The first process, `admin.c`, is tasked with parsing inputs and communicating with `bookkeeper.c` via message queue. The second process, `bookkeeper.c`, is tasked with adding, removing, and retrieving information from a doubly linked list depending on the procedure call.
 
 ### Known limitations
 
