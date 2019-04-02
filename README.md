@@ -84,6 +84,10 @@ Delete result: -1
 
 Our solution uses two processes and message queues. The first process, `admin.c`, is tasked with parsing inputs and communicating with `bookkeeper.c` via message queue. The second process, `bookkeeper.c`, is tasked with adding, removing, and retrieving information from a doubly linked list depending on the procedure call.
 
+### Note 
+
+We choose a buffer size of 32 characters instead of 12 because the procedure 'check_employee_number' is of length 21; thus, we needed a buffer larger than 12 in order to send this procedure call.
+
 ### Known limitations
 
 #### insert 
